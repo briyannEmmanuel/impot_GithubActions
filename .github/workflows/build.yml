@@ -27,8 +27,8 @@ jobs:
           distribution: 'temurin'
           cache: maven
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
-      - name: Deploy
+        run: mvn -B package
+      - name: Publish to Docker
         run: |
           mvn -B spring-boot:build-image -Dspring-boot.build-image.publish=true\
               -Ddocker.user=${{secrets.DOCKER_USER}} -Ddocker.token=${{secrets.DOCKER_TOKEN}}\
