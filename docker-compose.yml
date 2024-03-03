@@ -1,0 +1,34 @@
+version: '3.9'
+
+services:
+
+  app-dockervolume-backend:
+    image: dockervolume-backend:1.0
+    container_name: container-dockervolume-backend
+    ports:
+      - 8080:8080
+    restart: unless-stopped
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    environment:
+      directoryDatas: /app/data/
+    volumes:
+      - datas:/app/data
+
+  mysql:
+    image: mysql:5.7
+    container_name: mysql_container
+    environment:
+      MYSQL_USER: root
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes
+      MYSQL_DB: impotgithubaction
+    ports:
+      - 3306:3306
+    volumes:
+      - mysql_data:/var/lib/mysql
+    restart: unless-stopped
+
+volumes:
+  datas:
+  mysql_data:
