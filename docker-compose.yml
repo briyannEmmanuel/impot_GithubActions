@@ -20,7 +20,7 @@ services:
     image: mysql:5.7
     container_name: mysql_container
     environment:
-      MYSQL_USER: root
+      #MYSQL_USER: root
       MYSQL_ALLOW_EMPTY_PASSWORD: yes
       MYSQL_DB: impotgithubaction
     ports:
