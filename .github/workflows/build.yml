@@ -31,8 +31,8 @@ jobs:
         run: mvn -B package  --file pom.xml
       - name: Deploy
         run: |
-          mvn -B spring-boot:build-image -Dspring-boot.build-image.publish=true\
-              -Ddocker.user=${{secrets.DOCKER_USER}} -Ddocker.token=${{secrets.DOCKER_TOKEN}}\
-              -DskipTests
+           mvn -B spring-boot:build-image -Dspring-boot.build-image.publish=true \
+               -Ddocker.user=${{ secrets.DOCKER_USER }} -Ddocker.token=${{ secrets.DOCKER_TOKEN }} \
+               -DskipTests
         
 
