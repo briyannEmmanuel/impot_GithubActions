@@ -28,6 +28,6 @@ jobs: # Définition des jobs à exécuter
         run: mvn -B package  --file pom.xml # Commande pour construire le projet avec Maven
       - name: Deploy # Nom de l'étape pour le déploiement
         run: | # Bloc de script à exécuter
-          mvn -B spring-boot:build-image -Dspring-boot.build-image.publish=true \ # Commande pour construire une image Docker avec Spring Boot et la publier
-              -Ddocker.user=${{ secrets.DOCKER_USER }} -Ddocker.token=${{ secrets.DOCKER_TOKEN }} \ # Utilisation des secrets Docker pour l'authentification
-              -DskipTests # Ignorer l'exécution des tests lors de la construction de l'image
+          mvn -B spring-boot:build-image -Dspring-boot.build-image.publish=true \ 
+              -Ddocker.user=${{ secrets.DOCKER_USER }} -Ddocker.token=${{ secrets.DOCKER_TOKEN }} \ 
+              -DskipTests 
