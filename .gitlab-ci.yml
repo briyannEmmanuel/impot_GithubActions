@@ -1,39 +1,41 @@
-stages:
-  - packaging
-  - build_docker_image
-default:
-  image: maven:latest
+stages: # Définition des étapes du pipeline
+  - packaging # Étape "packaging" pour l'emballage du projet
+  - build_docker_image # Étape "build_docker_image" pour la construction de l'image Docker
 
-variables:
-  MAVEN_OPIS: "-Dmaven.repo.local=C:\\Users\\hp\\.m2\\repository"
-run unit test and package:
-  inherit:
+default: # Définition de l'image par défaut à utiliser
+  image: maven:latest # Utilisation de l'image Maven la plus récente
+
+variables: # Définition des variables
+  MAVEN_OPIS: "-Dmaven.repo.local=C:\\Users\\hp\\.m2\\repository" # Définition de la variable MAVEN_OPIS
+
+run unit test and package: # Définition de la tâche pour exécuter les tests unitaires et empaqueter
+  inherit: # Héritage des paramètres par défaut et des variables
     default: true
     variables: true
-  stage: packaging
-  script:
-    - mvn clean package -Dmaven.test.skip
-  artifacts:
-    paths:
-      - target/*.jar
-  cache:
-    paths:
-      - .m2/repository
+  stage: packaging # Étape à laquelle cette tâche appartient
+  script: # Script à exécuter dans cette tâche
+    - mvn clean package -Dmaven.test.skip # Commande pour nettoyer et empaqueter le projet Maven sans exécuter les tests
+  artifacts: # Définition des artefacts à conserver après l'exécution de la tâche
+    paths: # Chemins des artefacts à conserver
+      - target/*.jar # Chemin des fichiers JAR générés dans le dossier target
+  cache: # Configuration du cache pour la gestion des dépendances Maven
+    paths: # Chemins à mettre en cache
+      - .m2/repository # Répertoire Maven local
 
-build docker image:
-  image: docker:latest
-  stage: build_docker_image
-  inherit:
-    default: false
-    variables: false
-  services:
-    - docker:dind
-  script:
-    - docker build -t $DOCKER_USER/impot:1.0 .
-    - docker save $DOCKER_USER/impot > impot
-    - docker login -u $DOCKER_USER -p $DOCKER_TOKEN
-    - docker push $DOCKER_USER/impot:1.0
-  artifacts:
-    paths:
-      - impot
-  when: manual
+build docker image: # Définition de la tâche pour construire l'image Docker
+  image: docker:latest # Utilisation de l'image Docker la plus récente
+  stage: build_docker_image # Étape à laquelle cette tâche appartient
+  inherit: # Héritage des paramètres par défaut et des variables
+    default: false # Ne pas utiliser la configuration par défaut
+    variables: false # Ne pas hériter des variables
+  services: # Configuration des services nécessaires pour cette tâche
+    - docker:dind # Utilisation du service Docker-in-Docker (DinD)
+  script: # Script à exécuter dans cette tâche
+    - docker build -t $DOCKER_USER/impot:1.0 . # Commande pour construire l'image Docker
+    - docker save $DOCKER_USER/impot > impot # Sauvegarde de l'image Docker dans un fichier
+    - docker login -u $DOCKER_USER -p $DOCKER_TOKEN # Connexion au registre Docker avec les identifiants
+    - docker push $DOCKER_USER/impot:1.0 # Publication de l'image Docker dans le registre
+  artifacts: # Définition des artefacts à conserver après l'exécution de la tâche
+    paths: # Chemins des artefacts à conserver
+      - impot # Chemin du fichier contenant l'image Docker
+  when: manual # Condition pour exécuter manuellement cette tâche

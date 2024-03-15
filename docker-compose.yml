@@ -1,34 +1,33 @@
-version: '3.9'
+version: '3.9' # Version de la syntaxe Docker Compose utilisée
 
-services:
+services: # Définition des services à exécuter dans le contexte de Docker Compose
 
-  app-dockervolume-backend:
-    image: dockervolume-backend:1.0
-    container_name: container-dockervolume-backend
-    ports:
-      - 8080:8080
-    restart: unless-stopped
-    build:
-      context: ./
-      dockerfile: Dockerfile
-    environment:
-      directoryDatas: /app/data/
-    volumes:
-      - datas:/app/data
+  app-dockervolume-backend: # Service pour l'application backend avec Docker Volume
+    image: dockervolume-backend:1.0 # Image Docker à utiliser pour le service
+    container_name: container-dockervolume-backend # Nom du conteneur Docker
+    ports: # Définition des ports à mapper
+      - 8080:8080 # Mappage du port 8080 du conteneur au port 8080 de l'hôte
+    restart: unless-stopped # Politique de redémarrage du conteneur en cas d'arrêt, sauf si explicitement arrêté
+    build: # Configuration pour la construction de l'image Docker
+      context: ./ # Contexte de construction (répertoire contenant les fichiers Docker)
+      dockerfile: Dockerfile # Nom du fichier Dockerfile à utiliser pour la construction de l'image
+    environment: # Variables d'environnement à définir pour le service
+      directoryDatas: /app/data/ # Définition d'une variable d'environnement 'directoryDatas'
+    volumes: # Définition des volumes à monter dans le conteneur
+      - datas:/app/data # Montage du volume 'datas' sur le chemin '/app/data' dans le conteneur
 
-  mysql:
-    image: mysql:8.3.0
-    container_name: mysql_container
-    environment:
-      #MYSQL_USER: root
-      MYSQL_ALLOW_EMPTY_PASSWORD: yes
-      MYSQL_DB: impotgithubaction
-    ports:
-      - 3306:3306
-    volumes:
-      - mysql_data:/data/mysql
-    restart: unless-stopped
+  mysql: # Service pour MySQL
+    image: mysql:8.3.0 # Image Docker à utiliser pour le service MySQL
+    container_name: mysql_container # Nom du conteneur MySQL
+    environment: # Variables d'environnement pour le service MySQL
+      MYSQL_ALLOW_EMPTY_PASSWORD: yes # Autorisation de mot de passe vide pour MySQL
+      MYSQL_DB: impotgithubaction # Nom de la base de données MySQL
+    ports: # Définition des ports à mapper
+      - 3306:3306 # Mappage du port 3306 du conteneur au port 3306 de l'hôte
+    volumes: # Définition des volumes à monter dans le conteneur
+      - mysql_data:/data/mysql # Montage du volume 'mysql_data' sur le chemin '/data/mysql' dans le conteneur
+    restart: unless-stopped # Politique de redémarrage du conteneur en cas d'arrêt, sauf si explicitement arrêté
 
-volumes:
-  datas:
-  mysql_data:
+volumes: # Définition des volumes Docker à utiliser dans le système de fichiers Docker
+  datas: # Définition d'un volume nommé 'datas' pour l'application backend
+  mysql_data: # Définition d'un volume nommé 'mysql_data' pour les données MySQL
